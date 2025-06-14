@@ -1,0 +1,24 @@
+/* Theme variables and color schemes */
+:root {
+    /* Light theme (default) */
+    --primary-color: #4CAF50;
+    --secondary-color: #2196F3;
+    --background-color: #ffffff;
+    --text-color: #333333;
+    --border-color: #e0e0e0;
+    --success-color: #4CAF50;
+    --warning-color: #FFC107;
+    --error-color: #F44336;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+    --primary-color: #66BB6A;
+    --secondary-color: #42A5F5;
+    --background-color: #121212;
+    --text-color: #ffffff;
+    --border-color: #424242;
+    --success-color: #66BB6A;
+    --warning-color: #FFD54F;
+    --error-color: #EF5350;
+}
