@@ -1,27 +1,25 @@
 // Timer service for managing Pomodoro timing
 class TimerService {
     constructor() {
-        this.timeRemaining = 0;
+        this.timeRemaining = 25 * 60; // Default to 25 minutes
+        this.initialTime = this.timeRemaining;
         this.timerId = null;
         this.isRunning = false;
         this.onTick = null;
         this.onComplete = null;
+        this.onStateChange = null;
     }
 
     /**
-     * Start the timer
-     * @param {number} duration - Duration in seconds
-     * @param {Function} onTick - Callback for each second
-     * @param {Function} onComplete - Callback when timer completes
+     * Start or resume the timer
      */
-    start(duration, onTick, onComplete) {
-        this.timeRemaining = duration;
-        this.onTick = onTick;
-        this.onComplete = onComplete;
-        this.isRunning = true;
+    start() {
+        if (this.isRunning) return;
 
+        this.isRunning = true;
         this.timerId = setInterval(() => {
             this.timeRemaining--;
+            
             if (this.onTick) {
                 this.onTick(this.timeRemaining);
             }
@@ -33,10 +31,26 @@ class TimerService {
                 }
             }
         }, 1000);
+
+        if (this.onStateChange) {
+            this.onStateChange(this.isRunning);
+        }
     }
 
     /**
-     * Stop the timer
+     * Pause the timer
+     */
+    pause() {
+        if (!this.isRunning) return;
+        
+        this.stop();
+        if (this.onStateChange) {
+            this.onStateChange(this.isRunning);
+        }
+    }
+
+    /**
+     * Stop the timer and internal cleanup
      */
     stop() {
         if (this.timerId) {
@@ -60,5 +74,43 @@ class TimerService {
         if (!this.isRunning && this.timeRemaining > 0) {
             this.start(this.timeRemaining, this.onTick, this.onComplete);
         }
+    }
+
+    /**
+     * Reset the timer to initial state
+     */
+    reset() {
+        this.stop();
+        this.timeRemaining = this.initialTime;
+        if (this.onTick) {
+            this.onTick(this.timeRemaining);
+        }
+        if (this.onStateChange) {
+            this.onStateChange(this.isRunning);
+        }
+    }
+
+    /**
+     * Set the callback for timer tick events
+     * @param {Function} callback - Function to call on each tick
+     */
+    setOnTick(callback) {
+        this.onTick = callback;
+    }
+
+    /**
+     * Set the callback for timer completion
+     * @param {Function} callback - Function to call when timer completes
+     */
+    setOnComplete(callback) {
+        this.onComplete = callback;
+    }
+
+    /**
+     * Set the callback for timer state changes
+     * @param {Function} callback - Function to call when timer state changes
+     */
+    setOnStateChange(callback) {
+        this.onStateChange = callback;
     }
 }

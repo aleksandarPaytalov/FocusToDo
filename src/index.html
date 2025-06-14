@@ -23,7 +23,25 @@
 </head>
 <body>
     <div id="app">
-        <!-- App content will be dynamically inserted here -->
+        <main class="main-container">
+            <section class="timer-section">                <div class="timer-display">
+                    <span class="timer-digits" id="minutes">25</span>
+                    <span class="timer-separator">:</span>
+                    <span class="timer-digits" id="seconds">00</span>
+                </div>
+                <div class="timer-controls">
+                    <button id="startTimer" class="control-btn primary" aria-label="Start Timer">
+                        Start
+                    </button>
+                    <button id="pauseTimer" class="control-btn" aria-label="Pause Timer" disabled>
+                        Pause
+                    </button>
+                    <button id="resetTimer" class="control-btn secondary" aria-label="Reset Timer" disabled>
+                        Reset
+                    </button>
+                </div>
+            </section>
+        </main>
     </div>
 </body>
 </html>

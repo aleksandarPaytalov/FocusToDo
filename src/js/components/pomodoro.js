@@ -1,50 +1,88 @@
 class Pomodoro {
     constructor() {
-        this.timer = new TimerService();
-        this.notifications = new NotificationManager();
-        this.currentSession = 'pomodoro'; // pomodoro, shortBreak, longBreak
-        this.sessionsCompleted = 0;
+        this.timerService = new TimerService();
+        this.initializeElements();
+        this.setupEventListeners();
+        this.setupTimerCallbacks();
+        
+        // Initial display update
+        this.updateDisplay(this.timerService.timeRemaining);
+        this.updateControls(false);
     }
 
-    start() {
-        const duration = this.getDuration();
-        this.timer.start(
-            duration,
-            this.updateDisplay.bind(this),
-            this.handleComplete.bind(this)
-        );
+    /**
+     * Initialize DOM elements
+     */
+    initializeElements() {
+        this.minutesDisplay = document.getElementById('minutes');
+        this.secondsDisplay = document.getElementById('seconds');
+        this.startButton = document.getElementById('startTimer');
+        this.pauseButton = document.getElementById('pauseTimer');
+        this.resetButton = document.getElementById('resetTimer');
     }
 
-    pause() {
-        this.timer.pause();
+    /**
+     * Setup event listeners for control buttons
+     */
+    setupEventListeners() {
+        this.startButton.addEventListener('click', () => {
+            this.timerService.start();
+        });
+
+        this.pauseButton.addEventListener('click', () => {
+            this.timerService.pause();
+        });
+
+        this.resetButton.addEventListener('click', () => {
+            this.timerService.reset();
+        });
     }
 
-    resume() {
-        this.timer.resume();
+    /**
+     * Setup timer service callbacks
+     */
+    setupTimerCallbacks() {
+        this.timerService.setOnTick((timeRemaining) => {
+            this.updateDisplay(timeRemaining);
+        });
+
+        this.timerService.setOnComplete(() => {
+            this.updateControls(false);
+        });
+
+        this.timerService.setOnStateChange((isRunning) => {
+            this.updateControls(isRunning);
+        });
     }
 
-    reset() {
-        this.timer.stop();
-        this.updateDisplay(this.getDuration());
-    }
-
-    getDuration() {
-        switch(this.currentSession) {
-            case 'shortBreak':
-                return CONSTANTS.TIMER.SHORT_BREAK;
-            case 'longBreak':
-                return CONSTANTS.TIMER.LONG_BREAK;
-            default:
-                return CONSTANTS.TIMER.POMODORO;
-        }
-    }
-
+    /**
+     * Update the timer display
+     * @param {number} timeRemaining - Time remaining in seconds
+     */
     updateDisplay(timeRemaining) {
-        // Will be implemented to update UI
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        
+        this.minutesDisplay.textContent = String(minutes).padStart(2, '0');
+        this.secondsDisplay.textContent = String(seconds).padStart(2, '0');
+        
+        // Update page title
+        document.title = `${minutes}:${String(seconds).padStart(2, '0')} - FocusToDo`;
     }
 
-    handleComplete() {
-        this.notifications.notify('Session Complete!');
-        // Additional completion logic will be implemented
+    /**
+     * Update control buttons state
+     * @param {boolean} isRunning - Whether the timer is running
+     */
+    updateControls(isRunning) {
+        this.startButton.disabled = isRunning;
+        this.pauseButton.disabled = !isRunning;
+        this.resetButton.disabled = !isRunning && 
+            this.timerService.timeRemaining === this.timerService.initialTime;
     }
 }
+
+// Initialize the Pomodoro component when the DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new Pomodoro();
+});
