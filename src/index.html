@@ -21,17 +21,49 @@
     <script src="js/components/tasks.js" defer></script>
     <script src="js/app.js" defer></script>
 </head>
-<body>
-    <div id="app">
+<body>    <div id="app">
         <main class="main-container">
-            <section class="timer-section">                <div class="timer-display">
-                    <span class="timer-digits" id="minutes">25</span>
-                    <span class="timer-separator">:</span>
-                    <span class="timer-digits" id="seconds">00</span>
+            <section class="timer-section">
+                <div class="timer-header">
+                    <div class="timer-modes">
+                        <button id="pomodoroMode" class="mode-btn active" aria-label="Pomodoro Mode">
+                            Pomodoro
+                        </button>
+                        <button id="shortBreakMode" class="mode-btn" aria-label="Short Break Mode">
+                            Short Break
+                        </button>
+                        <button id="longBreakMode" class="mode-btn" aria-label="Long Break Mode">
+                            Long Break
+                        </button>
+                    </div>
                 </div>
-                <div class="timer-controls">
-                    <button id="startTimer" class="control-btn primary" aria-label="Start Timer">
-                        Start
+
+                <div class="timer-content">
+                    <div class="timer-display">
+                        <span id="minutes">25</span>
+                        <span class="timer-separator">:</span>
+                        <span id="seconds">00</span>
+                    </div>
+
+                    <div class="timer-controls">                        <button id="startTimer" class="control-btn start-btn" aria-label="Start Timer">
+                            Start
+                        </button>
+                        <button id="pauseTimer" class="control-btn" aria-label="Pause Timer" disabled>
+                            Pause
+                        </button>
+                        <button id="resetTimer" class="control-btn" aria-label="Reset Timer" disabled>
+                            Reset
+                        </button>
+                    </div>
+
+                    <div class="session-info">
+                        <span id="sessionCount" class="session-count">#1</span>
+                        <span id="sessionStatus" class="session-status">Focus Time</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
                     </button>
                     <button id="pauseTimer" class="control-btn" aria-label="Pause Timer" disabled>
                         Pause
@@ -39,6 +71,11 @@
                     <button id="resetTimer" class="control-btn secondary" aria-label="Reset Timer" disabled>
                         Reset
                     </button>
+                </div>
+
+                <div class="session-info">
+                    <span id="sessionCount" class="session-count">#1</span>
+                    <span id="sessionStatus" class="session-status">Focus Time</span>
                 </div>
             </section>
         </main>

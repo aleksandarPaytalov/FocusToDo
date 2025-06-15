@@ -85,4 +85,68 @@ class TimerService {
     setOnStateChange(callback) {
         this.onStateChange = callback;
     }
+
+    /**
+     * Timer modes configuration
+     */
+    #modes = {
+        pomodoro: {
+            duration: 25 * 60,
+            label: 'Focus Time'
+        },
+        shortBreak: {
+            duration: 5 * 60,
+            label: 'Short Break'
+        },
+        longBreak: {
+            duration: 15 * 60,
+            label: 'Long Break'
+        }
+    };
+
+    /**
+     * Change timer mode
+     * @param {string} mode - The mode to switch to ('pomodoro', 'shortBreak', 'longBreak')
+     */
+    setMode(mode) {
+        if (!this.#modes[mode]) return;
+        
+        const wasRunning = this.isRunning;
+        this.pause();
+
+        this.currentMode = mode;
+        this.timeRemaining = this.#modes[mode].duration;
+        this.initialTime = this.timeRemaining;
+
+        if (this.onTick) {
+            this.onTick(this.timeRemaining);
+        }
+
+        if (this.onModeChange) {
+            this.onModeChange(mode, this.#modes[mode].label);
+        }
+
+        if (wasRunning && this.autoStart) {
+            this.start();
+        }
+    }
+
+    /**
+     * Get the current mode configuration
+     * @returns {Object} The current mode configuration
+     */
+    getCurrentMode() {
+        return {
+            mode: this.currentMode,
+            label: this.#modes[this.currentMode].label
+        };
+    }
+
+    /**
+     * Set callback for mode changes
+     * @param {Function} callback - Function to call when mode changes
+     */
+    setOnModeChange(callback) {
+        this.onModeChange = callback;
+    }
 }
