@@ -8,9 +8,7 @@ class TimerService {
         this.onTick = null;
         this.onComplete = null;
         this.onStateChange = null;
-    }
-
-    /**
+    }    /**
      * Start or resume the timer
      */
     start() {
@@ -25,7 +23,7 @@ class TimerService {
             }
             
             if (this.timeRemaining <= 0) {
-                this.stop();
+                this.pause();
                 if (this.onComplete) {
                     this.onComplete();
                 }
@@ -41,38 +39,14 @@ class TimerService {
      * Pause the timer
      */
     pause() {
-        if (!this.isRunning) return;
-        
-        this.stop();
-        if (this.onStateChange) {
-            this.onStateChange(this.isRunning);
-        }
-    }
-
-    /**
-     * Stop the timer and internal cleanup
-     */
-    stop() {
         if (this.timerId) {
             clearInterval(this.timerId);
             this.timerId = null;
         }
         this.isRunning = false;
-    }
-
-    /**
-     * Pause the timer
-     */
-    pause() {
-        this.stop();
-    }
-
-    /**
-     * Resume the timer
-     */
-    resume() {
-        if (!this.isRunning && this.timeRemaining > 0) {
-            this.start(this.timeRemaining, this.onTick, this.onComplete);
+        
+        if (this.onStateChange) {
+            this.onStateChange(this.isRunning);
         }
     }
 
@@ -80,13 +54,11 @@ class TimerService {
      * Reset the timer to initial state
      */
     reset() {
-        this.stop();
+        this.pause();
         this.timeRemaining = this.initialTime;
+        
         if (this.onTick) {
             this.onTick(this.timeRemaining);
-        }
-        if (this.onStateChange) {
-            this.onStateChange(this.isRunning);
         }
     }
 

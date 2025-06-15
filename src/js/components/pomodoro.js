@@ -19,9 +19,7 @@ class Pomodoro {
         this.startButton = document.getElementById('startTimer');
         this.pauseButton = document.getElementById('pauseTimer');
         this.resetButton = document.getElementById('resetTimer');
-    }
-
-    /**
+    }    /**
      * Setup event listeners for control buttons
      */
     setupEventListeners() {
@@ -35,6 +33,7 @@ class Pomodoro {
 
         this.resetButton.addEventListener('click', () => {
             this.timerService.reset();
+            this.updateControls(false);
         });
     }
 
